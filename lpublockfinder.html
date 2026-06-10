@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LPU Block Finder</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin-top: 100px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        input {
+            width: 300px;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-top: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 450px;
+            margin: auto;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007BFF;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>LPU Block Finder</h1>
+    <p>Find any block in LPU Campus</p>
+
+    <input type="text"
+           id="blockInput"
+           placeholder="Enter Block Number (e.g. Block 34)">
+           
+    <button onclick="findBlock()">Search</button>
+
+    <div id="result"></div>
+
+</div>
+
+<script>
+
+const blocks = {
+
+    "1": {
+        name: "Admissions Office and Main Administrative Hub",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "2": {
+        name: "Mittal School of Business (Management & Commerce)",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "3": {
+        name: "Mittal School of Business (Management & Commerce)",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "4": {
+        name: "School of Computer Applications and IT",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "8": {
+        name: "School of Law",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "9": {
+        name: "School of Architecture and Interior Design",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "10": {
+        name: "School of Architecture and Interior Design",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "11": {
+        name: "School of Fashion Design",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "12": {
+        name: "School of Fashion Design",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "13": {
+        name: "Division of Student Welfare (DSW) & Fine Arts",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "14": {
+        name: "School of Journalism, Film & Mass Communication",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "25": {
+        name: "School of Hotel Management and Tourism",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "26": {
+        name: "School of Hotel Management and Tourism",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "27": {
+        name: "School of Agriculture",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "28": {
+        name: "School of Agriculture",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "29": {
+        name: "Mechanical Engineering & Aerospace Engineering",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "30": {
+        name: "Mechanical Engineering & Aerospace Engineering",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "32": {
+        name: "Civil Engineering & Shanti Devi Mittal Auditorium",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "33": {
+        name: "School of Bioengineering and Biosciences",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "34": {
+        name: "Computer Science & Engineering (CSE Block)",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "36": {
+        name: "School of Computer Science & Engineering (CSE Main Labs)",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "37": {
+        name: "Central Library (6-Story Landmark Building)",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "38": {
+        name: "School of Pharmaceutical Sciences & Ayurvedic Sciences",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "55": {
+        name: "School of Physical Education and Sports Facilities",
+        gps: "31.2536° N, 75.7037° E"
+    },
+
+    "uni-mall": {
+        name: "University Shopping Mall, Food Court & Student Utilities",
+        gps: "31.2536° N, 75.7037° E"
+    }
+};
+
+function findBlock() {
+
+    let block = document.getElementById("blockInput").value
+        .trim()
+        .toLowerCase();
+
+    block = block.replace("block", "").trim();
+
+    if(block === "uni mall"){
+        block = "uni-mall";
+    }
+
+    let result = document.getElementById("result");
+
+    if(blocks[block]){
+
+        result.innerHTML = `
+            <div class="card">
+                <h2>✅ Block Found</h2>
+
+                <p><strong>Block:</strong> ${block.toUpperCase()}</p>
+
+                <p><strong>Department:</strong>
+                ${blocks[block].name}</p>
+
+                <p><strong>Coordinates:</strong>
+                ${blocks[block].gps}</p>
+
+                <p>
+                    <a href="https://www.google.com/maps?q=31.2536,75.7037"
+                       target="_blank">
+                       📍 Open in Google Maps
+                    </a>
+                </p>
+            </div>
+        `;
+
+    } else {
+
+        result.innerHTML = `
+            <div class="card">
+                <p class="error">❌ Block Not Found</p>
+                <p>Please enter a valid block number.</p>
+            </div>
+        `;
+    }
+}
+
+document.getElementById("blockInput")
+.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        findBlock();
+    }
+});
+
+</script>
+
+</body>
+</html>
